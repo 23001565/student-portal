@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: student_portal
+      POSTGRES_USER: portal_admin
+      POSTGRES_PASSWORD: strong_password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgres://portal_admin:strong_password@db:5432/student_portal
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: your_jwt_secret_here
+      SESSION_TIMEOUT_MINUTES: 20
+      RELOGIN_COOLDOWN_MINUTES: 30
+    depends_on:
+      - db
+      - redis
+    ports:
+      - "5000:5000"
+
+  frontend:
+    build: ./frontend
+    environment:
+      REACT_APP_API_URL: http://localhost:5000/api
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:
