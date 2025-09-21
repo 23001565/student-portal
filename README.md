@@ -1,4 +1,5 @@
 Project for Web programming
+```plaintext
 student-portal-template/
 ├── backend/
 │   ├── src/
@@ -27,4 +28,7 @@ student-portal-template/
 ├── docker-compose.yml
 ├── README.md
 └── .gitignore
+
+```
+
 
